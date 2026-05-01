@@ -1,0 +1,49 @@
+spring:
+
+  application:
+    name: Projet-film
+  datasource:
+    url: jdbc:mysql://localhost:3306/db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ahmed
+    password: 2003
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  thymeleaf:
+    cache: false
+  web:
+    resources:
+      static-locations:
+        - file:src/main/resources/static/
+        - classpath:/static/
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 
+    password:  
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+security:
+  token:
+    secret: 
+
+    expiration-ms-confirmation: 1800000
+    expiration-ms-authentication: 2592000000
+  user:
+    name:
+    password:
+server:
+  port: 8085

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{layout :: head}" >
+    <title>Ajouter Acteur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50">
+<div th:replace="~{layout :: header}"></div>
+
+<div  class="flex items-center justify-center min-h-[80vh]">
+
+    <div class="bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md transform transition-all">
+
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-50 text-blue-600 rounded-full mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-slate-800 tracking-tight">Nouvel Acteur</h2>
+            <p class="text-slate-500 text-sm">Ajouter un nouveau talent au casting</p>
+        </div>
+
+        <form th:action="@{/actors/save}" th:object="${actor}" method="post" class="space-y-5">
+            <input type="hidden" th:field="*{id}" />
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 ml-1">Nom de famille</label>
+                <input type="text" th:field="*{nom}" placeholder="Ex: Di Caprio"
+                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all placeholder:text-slate-300" required>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 ml-1">Prénom</label>
+                <input type="text" th:field="*{prenom}" placeholder="Ex: Leonardo"
+                       class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all placeholder:text-slate-300" required>
+            </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row gap-3">
+                <button type="submit" class="flex-[2] bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-200 transition-all active:scale-95">
+                    Enregistrer
+                </button>
+                <a th:href="@{/actors/all}" class="flex-1 text-center bg-slate-100 text-slate-600 py-3 rounded-xl font-bold hover:bg-slate-200 transition-all">
+                    Annuler
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
+<div th:replace="~{layout :: footer}"></div>
+
+</body>
+</html>

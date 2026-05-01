@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{layout :: head}">
+    <title>Détail du Film | CinéGestion</title>
+</head>
+<body class="flex flex-col min-h-full bg-gray-50 font-sans antialiased">
+
+<div th:replace="~{layout :: header}"></div>
+
+<main class="flex-grow container mx-auto px-4 py-8">
+
+    <div class="mb-6">
+        <a th:href="@{/films}" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Retour à la liste
+        </a>
+    </div>
+
+    <div th:if="${film != null}" class="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+
+            <!-- Left: Image -->
+            <div class="flex items-center justify-center">
+                <div class="aspect-[4/3] w-full bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl overflow-hidden flex items-center justify-center">
+                    <span th:if="${film.photo == null or film.photo.isEmpty()}">
+                        <img th:src="@{/photos/no-image.jpg}" alt="No image" class="w-full h-full object-cover" />
+                    </span>
+                    <span th:unless="${film.photo == null or film.photo.isEmpty()}">
+                        <img th:src="@{'/photos/' + ${film.photo}}" th:alt="${film.titre}" class="w-full h-full object-cover" />
+                    </span>
+                </div>
+            </div>
+
+            <!-- Right: Details -->
+            <div class="flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-sm uppercase font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-lg" 
+                              th:text="${film.category != null ? film.category.nom : 'Sans catégorie'}"></span>
+                    </div>
+
+                    <h1 class="text-4xl font-extrabold text-slate-900 mb-2" th:text="${film.titre}"></h1>
+
+                    <div class="flex items-center gap-4 mb-8 pb-8 border-b border-gray-200">
+                        <div>
+                            <p class="text-xs uppercase font-bold text-slate-500 tracking-widest">Année</p>
+                            <p class="text-2xl font-bold text-slate-900" th:text="${film.annepartution}"></p>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h2 class="text-sm uppercase font-bold text-slate-600 tracking-widest mb-3">Description</h2>
+                        <p class="text-slate-700 leading-relaxed text-lg" th:text="${film.description}"></p>
+                    </div>
+
+                    <div class="mb-8">
+                        <h2 class="text-sm uppercase font-bold text-slate-600 tracking-widest mb-4">Casting Principal</h2>
+                        <div class="flex flex-wrap gap-2">
+                            <span th:each="acteur : ${film.acteurs}"
+                                  class="text-sm bg-gray-100 text-slate-700 px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-200 transition-colors"
+                                  th:text="${acteur.nom} + ' ' + ${acteur.prenom}">
+                            </span>
+                            <span th:if="${#lists.isEmpty(film.acteurs)}" class="text-sm text-slate-400 italic">Aucun acteur listé</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div sec:authorize="hasRole('ADMIN')"  class="flex items-center gap-4 pt-8 border-t border-gray-200">
+                    <a th:href="@{/films/edit/{id}(id=${film.id})}"
+                       class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all active:scale-95">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                        </svg>
+                        Modifier
+                    </a>
+
+                    <form th:action="@{/films/delete/{id}(id=${film.id})}" method="post"
+                          th:onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ' + [[${film.titre}]] + ' ?');"
+                          class="flex-1">
+                        <button type="submit" class="w-full inline-flex items-center justify-center px-6 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 shadow-lg shadow-red-200 transition-all active:scale-95">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${film == null}" class="flex flex-col items-center justify-center py-32 text-slate-400">
+        <svg class="w-20 h-20 mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-lg font-semibold">Film non trouvé</p>
+    </div>
+
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+
+</body>
+</html>

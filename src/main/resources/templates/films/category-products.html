@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}">
+    <title>Catégories | CinéGestion</title>
+</head>
+<body class="flex flex-col min-h-full bg-gray-50 font-sans antialiased">
+
+<div th:replace="~{layout :: header}"></div>
+
+<main class="flex-grow container mx-auto px-4 py-8">
+
+    <div class="mb-8">
+        <a th:href="@{/}" class="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Retour à l'accueil
+        </a>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+                <span th:text="${category != null ? category.nom : 'Catégorie non trouvée'}"></span>
+            </h1>
+            <p class="text-slate-500 mt-1">Parcourez tous les films de cette catégorie</p>
+        </div>
+    </div>
+
+    <div th:if="${category != null}">
+        <div th:if="${!films.isEmpty()}" class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-700 rounded-r-xl">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                <span th:text="'Total: ' + ${#lists.size(films)} + ' film(s)'"></span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div th:each="film : ${films}" class="group bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 flex flex-col h-full">
+
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center overflow-hidden rounded-t-3xl">
+                    <span th:if="${film.photo == null or film.photo.isEmpty()}">
+                        <img th:src="@{/photos/no-image.jpg}" alt="No image" class="w-full h-full object-cover" />
+                    </span>
+                    <span th:unless="${film.photo == null or film.photo.isEmpty()}">
+                        <img th:src="@{'/photos/' + ${film.photo}}" th:alt="${film.titre}" class="w-full h-full object-cover" />
+                    </span>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-white/80 backdrop-blur-md text-slate-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-white/50" th:text="${film.annepartution}"></span>
+                    </div>
+                </div>
+
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-[10px] uppercase font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md" th:text="${film.category != null ? film.category.nom : 'Sans catégorie'}"></span>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 leading-tight mb-4 group-hover:text-blue-600 transition-colors line-clamp-2" th:text="${film.titre}"></h3>
+
+                    <p class="text-sm text-slate-600 mb-4 flex-grow line-clamp-3" th:text="${film.description != null and !film.description.isEmpty() ? film.description : 'Aucune description disponible'}"></p>
+
+                    <div class="space-y-3 flex-grow">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Casting Principal</p>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span th:each="acteur : ${film.acteurs}"
+                                  class="text-xs bg-gray-50 text-slate-600 px-2 py-1 rounded-lg border border-gray-100 hover:bg-white hover:border-blue-200 transition-colors"
+                                  th:text="${acteur.nom} + ' ' + ${acteur.prenom}">
+                            </span>
+                            <span th:if="${#lists.isEmpty(film.acteurs)}" class="text-sm text-slate-400 italic">Aucun acteur</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-50">
+                        <a th:href="@{/films/film/{id}(id=${film.id})}"
+                           class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Voir Détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(films)}" class="flex flex-col items-center justify-center py-32 text-slate-400">
+            <svg class="w-20 h-20 mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16h10V4M7 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2m0 0V2a2 2 0 00-2-2h-2a2 2 0 00-2 2v2"/>
+            </svg>
+            <p class="text-lg font-semibold">Aucun film dans cette catégorie</p>
+        </div>
+    </div>
+
+    <div th:if="${category == null}" class="flex flex-col items-center justify-center py-32 text-slate-400">
+        <svg class="w-20 h-20 mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <p class="text-lg font-semibold">Catégorie non trouvée</p>
+    </div>
+
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+
+</body>
+</html>

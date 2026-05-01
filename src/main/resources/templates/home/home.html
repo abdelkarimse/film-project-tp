@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}">
+    <title>Accueil | CinéGestion</title>
+</head>
+<body class="flex flex-col min-h-full bg-gray-50 font-sans antialiased">
+
+<div th:replace="~{layout :: header}"></div>
+
+<main class="flex-grow container mx-auto px-4 py-8">
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-4">
+        <div>
+            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Bienvenue à CinéManager</h1>
+            <p class="text-slate-600 mt-2 text-lg">Explorez notre collection de films et catégories</p>
+        </div>
+    </div>
+
+    <section class="mb-12">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center">
+            <svg class="w-6 h-6 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM15 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zM5 13a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM15 13a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z"/>
+            </svg>
+            Catégories
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <a th:each="category : ${categories}"
+               th:href="@{/films/categorie/{id}(id=${category.id})}"
+               class="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-200 text-center">
+                <div class="bg-blue-50 text-blue-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-900 group-hover:text-blue-600 transition-colors" th:text="${category.nom}"></h3>
+            </a>
+            <div th:if="${#lists.isEmpty(categories)}" class="col-span-full text-center py-8">
+                <p class="text-slate-400">Aucune catégorie disponible</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+            <h2 class="text-2xl font-bold text-slate-900 flex items-center">
+                <svg class="w-6 h-6 mr-3 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5 3a2 2 0 012-2h6a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V3z"/>
+                </svg>
+                Tous les Films
+            </h2>
+            <a th:href="@{/films/page/1}" class="text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center">
+                Voir tous les films
+                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div th:each="film : ${films}" class="group bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 flex flex-col h-full">
+
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center overflow-hidden rounded-t-3xl">
+                    <span th:if="${film.photo == null or film.photo.isEmpty()}">
+                        <img th:src="@{/photos/no-image.jpg}" alt="No image" class="w-full h-full object-cover" />
+                    </span>
+                    <span th:unless="${film.photo == null or film.photo.isEmpty()}">
+                        <img th:src="@{'/photos/' + ${film.photo}}" th:alt="${film.titre}" class="w-full h-full object-cover" />
+                    </span>
+                    <div class="absolute top-4 right-4">
+                        <span class="bg-white/80 backdrop-blur-md text-slate-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-white/50" th:text="${film.annepartution}"></span>
+                    </div>
+                </div>
+
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-[10px] uppercase font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md" th:text="${film.category != null ? film.category.nom : 'Sans catégorie'}"></span>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-800 leading-tight mb-4 group-hover:text-blue-600 transition-colors line-clamp-2" th:text="${film.titre}"></h3>
+
+                    <p class="text-sm text-slate-600 mb-4 flex-grow line-clamp-2" th:text="${film.description != null and film.description.isEmpty() ? 'Aucune description disponible' : film.description}"></p>
+
+                    <div class="space-y-3 flex-grow">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Casting</p>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span th:each="acteur : ${film.acteurs}"
+                                  class="text-xs bg-gray-50 text-slate-600 px-2 py-1 rounded-lg border border-gray-100 hover:bg-white hover:border-blue-200 transition-colors"
+                                  th:text="${acteur.nom} + ' ' + ${acteur.prenom}">
+                            </span>
+                            <span th:if="${#lists.isEmpty(film.acteurs)}" class="text-sm text-slate-400 italic">Aucun acteur</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-gray-50">
+                        <a th:href="@{/films/film/{id}(id=${film.id})}"
+                           class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Voir Détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(films)}" class="flex flex-col items-center justify-center py-32 text-slate-400">
+            <svg class="w-20 h-20 mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16h10V4M7 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2m0 0V2a2 2 0 00-2-2h-2a2 2 0 00-2 2v2"/>
+            </svg>
+            <p class="text-lg font-semibold">Aucun film disponible</p>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div th:if="${!#lists.isEmpty(films)}" class="mt-10 flex items-center justify-center gap-2">
+            <a th:if="${currentPage > 1}" th:href="@{/home/page/1(sortField=${sortField},sortDir=${sortDir})}"
+               class="px-3 py-2 rounded-lg border border-gray-300 text-slate-700 hover:bg-gray-100 font-medium">
+                &lsaquo;&lsaquo; Première
+            </a>
+            <a th:if="${currentPage > 1}" th:href="@{/home/page/{pageNum}(pageNum=${currentPage - 1},sortField=${sortField},sortDir=${sortDir})}"
+               class="px-3 py-2 rounded-lg border border-gray-300 text-slate-700 hover:bg-gray-100 font-medium">
+                &lsaquo; Précédent
+            </a>
+
+            <div class="flex gap-1">
+                <th:block th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+                    <th:block th:if="${pageNum >= currentPage - 2 && pageNum <= currentPage + 2}">
+                        <a th:if="${pageNum != currentPage}" th:href="@{/home/page/{pageNum}(pageNum=${pageNum},sortField=${sortField},sortDir=${sortDir})}"
+                           class="px-3 py-2 rounded-lg border border-gray-300 text-slate-700 hover:bg-gray-100 font-medium"
+                           th:text="${pageNum}"></a>
+                        <span th:if="${pageNum == currentPage}"
+                              class="px-3 py-2 rounded-lg bg-blue-600 text-white font-bold"
+                              th:text="${pageNum}"></span>
+                    </th:block>
+                </th:block>
+            </div>
+
+            <a th:if="${currentPage < totalPages}" th:href="@{/home/page/{pageNum}(pageNum=${currentPage + 1},sortField=${sortField},sortDir=${sortDir})}"
+               class="px-3 py-2 rounded-lg border border-gray-300 text-slate-700 hover:bg-gray-100 font-medium">
+                Suivant &rsaquo;
+            </a>
+            <a th:if="${currentPage < totalPages}" th:href="@{/home/page/{pageNum}(pageNum=${totalPages},sortField=${sortField},sortDir=${sortDir})}"
+               class="px-3 py-2 rounded-lg border border-gray-300 text-slate-700 hover:bg-gray-100 font-medium">
+                Dernière &rsaquo;&rsaquo;
+            </a>
+
+            <span class="ml-4 text-slate-600 font-medium">
+                Page <span th:text="${currentPage}"></span> sur <span th:text="${totalPages}"></span>
+            </span>
+        </div>
+    </section>
+
+
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+
+</body>
+</html>

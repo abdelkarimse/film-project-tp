@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <div th:replace="~{layout :: header}"></div>
+</head>
+<body class="bg-slate-950 flex flex-col min-h-screen">
+
+
+<main class="flex-grow flex items-center justify-center px-4 py-12">
+    <div class="bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-800 w-full max-w-md">
+
+        <div class="text-center mb-8">
+            <h2 class="text-white text-3xl font-bold">Connexion</h2>
+            <p class="text-gray-400 mt-2">Accédez à votre espace CineManager</p>
+        </div>
+
+        <div th:if="${param.error}" class="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-6 text-sm">
+            Identifiants invalides. Veuillez réessayer.
+        </div>
+
+        <div th:if="${param.logout}" class="bg-blue-500/10 border border-blue-500 text-blue-400 p-3 rounded-lg mb-6 text-sm">
+            Vous avez été déconnecté.
+        </div>
+        
+        <div th:if="${message}" class="bg-blue-500/10 border border-blue-500 text-blue-400 p-3 rounded-lg mb-6 text-sm">
+            <span th:text="${message}">Default message</span>
+        </div>
+
+        <form th:action="@{/auth/login}" method="post" class="space-y-6">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input type="text" id="username" name="username" required
+                       class="w-full bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                       placeholder="votre@email.com">
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+                <input type="password" id="password" name="password" required
+                       class="w-full bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                       placeholder="••••••••">
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg shadow-lg shadow-blue-900/20 transition duration-300 transform hover:-translate-y-0.5">
+                Se connecter
+            </button>
+        </form>
+
+        <p class="text-center text-gray-500 mt-8 text-sm">
+            Pas encore de compte ?
+            <a href="/register" class="text-blue-500 hover:underline">S'inscrire</a>
+        </p>
+    </div>
+</main>
+
+<div th:replace="~{layout :: footer}"></div>
+
+</body>
+</html>

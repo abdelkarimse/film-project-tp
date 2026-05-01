@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}">
+    <title>CineManager | Nouvelle Catégorie</title>
+</head>
+<body>
+<div th:replace="~{layout :: header}"></div>
+
+<div >
+    <div class="mb-6">
+        <a href="/films/categories" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition flex items-center">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            Retour aux catégories
+        </a>
+    </div>
+
+    <div class="max-w-xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+
+            <div class="bg-slate-900 px-8 py-6">
+                <h2 class="text-2xl font-bold text-white">Ajouter une Catégorie</h2>
+                <p class="text-slate-400 text-sm mt-1">Créez une nouvelle classification pour votre bibliothèque.</p>
+            </div>
+
+            <form th:action="@{/films/addcategories}" th:object="${category}" method="post" class="p-8 space-y-6">
+
+                <div class="space-y-2">
+                    <label for="nom" class="block text-sm font-semibold text-slate-700">
+                        Nom de la catégorie
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                        </div>
+                        <input type="text"
+                               th:field="*{nom}"
+                               id="nom"
+                               placeholder="Ex: Science-Fiction, Drame, Action..."
+                               class="block w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition outline-none"
+                               required>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1 italic">Le nom doit être unique et descriptif.</p>
+                </div>
+
+                <div class="flex items-center space-x-4 pt-4">
+                    <button type="submit"
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-200 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]">
+                        Enregistrer
+                    </button>
+                    <a href="/films/categories"
+                       class="px-6 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition duration-200 text-center">
+                        Annuler
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div th:replace="~{layout :: footer}"></div>
+
+</body>
+</html>

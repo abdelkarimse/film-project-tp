@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{layout :: header}"></div>
+</head>
+<body class="bg-slate-950 flex flex-col min-h-screen">
+
+
+<main class="flex-grow flex items-center justify-center px-4 py-12">
+    <div class="bg-slate-900 p-8 rounded-2xl shadow-2xl border border-slate-800 w-full max-w-md">
+
+        <div class="text-center mb-8">
+            <h2 class="text-white text-3xl font-bold">Inscription</h2>
+            <p class="text-gray-400 mt-2">Rejoignez la communauté CineManager</p>
+        </div>
+
+        <div th:if="${error}" class="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg mb-6 text-sm">
+            <span th:text="${error}">Erreur d'inscription</span>
+        </div>
+
+        <form th:action="@{/auth/register}" method="post" class="space-y-5">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Nom complet</label>
+                <input type="text" id="name" name="name" required
+                       class="w-full bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                       placeholder="Jean Dupont">
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input type="email" id="email" name="email" required
+                       class="w-full bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                       placeholder="nom@exemple.com">
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+                <input type="password" id="password" name="password" required
+                       class="w-full bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                       placeholder="••••••••">
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg shadow-lg shadow-emerald-900/20 transition duration-300 transform hover:-translate-y-0.5">
+                Créer mon compte
+            </button>
+        </form>
+
+        <p class="text-center text-gray-500 mt-8 text-sm">
+            Déjà membre ?
+            <a href="/login" class="text-blue-500 hover:underline">Se connecter</a>
+        </p>
+    </div>
+</main>
+
+<div th:replace="~{layout :: footer}"></div>
+
+</body>
+</html>
